@@ -15,17 +15,18 @@ include $(DEVKITPPC)/wii_rules
 # SOURCES is a list of directories containing source code
 # INCLUDES is a list of directories containing extra header files
 #---------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
+TARGET		:=	boot
 BUILD		:=	build
 SOURCES		:=	source source/md5
 DATA		:=	data
-INCLUDES	:=
+INCLUDES	:=	include
 
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
 
-CFLAGS	= -g -O2 -mrvl -Wall $(MACHDEP) $(INCLUDE) `freetype-config --cflags`
+CFLAGS	= -g -O2 -mrvl -Wall $(MACHDEP) $(INCLUDE) `freetype-config --cflags` `libpng-config --cflags` \
+			`$(PREFIX)pkg-config libjpeg zlib --cflags`
 CXXFLAGS	=	$(CFLAGS)
 
 LDFLAGS	=	-g $(MACHDEP) -mrvl -Wl,-Map,$(notdir $@).map
@@ -33,7 +34,8 @@ LDFLAGS	=	-g $(MACHDEP) -mrvl -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lgrrlib -lpngu `$(PREFIX)pkg-config freetype2 libpng libjpeg --libs` -lfat -lz -lwiiuse -lbte -lmad -logc -lm
+LIBS	:=	-lgrrlib -lpngu `freetype-config --libs` `libpng-config --libs` `$(PREFIX)pkg-config libjpeg --libs` \
+				-lfat `$(PREFIX)pkg-config zlib --libs` -lwiiuse -lbte -lmad -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -106,11 +108,11 @@ clean:
 
 #---------------------------------------------------------------------------------
 run:
-	psoload $(TARGET).dol
+	wiiload $(TARGET).dol "sd:/apps/$(notdir $(CURDIR))/$(TARGET).dol"
 
 #---------------------------------------------------------------------------------
-reload:
-	psoload -r $(TARGET).dol
+test:
+	dolphin -d -b -e $(TARGET).dol
 
 
 #---------------------------------------------------------------------------------
