@@ -142,8 +142,9 @@ void Video_DrawBanner(const char* id, const char* title, int x, int y, u8 select
 	//515c26
 	//5c4726
 	GRRLIB_DrawImg(x, y, GFX_Mask, 0, 1, 1, color);
-	Video_Print(x - 16, y - 16, id, 0.6, 0xFFFFFF80);
+	Video_Print(x - 10, y - 16, id, 0.6, 0xFFFFFF80);
 
+	// Adjust title name position
 	char* titleCopy = "";
 	strcpy(titleCopy, title);
 

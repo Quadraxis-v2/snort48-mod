@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>   
 
 #include <grrlib.h>
 
@@ -27,6 +28,11 @@
 #include "tools.h"
 #include "md5.h"
 
+
+#define MII_CHANNEL			0x0001000248414341
+#define PHOTO_CHANNEL		0x0001000248414141
+#define PHOTO_CHANNEL_11	0x0001000248415941
+#define SHOP_CHANNEL		0x0001000248414241
 
 #define DISC_CHANNEL		0x0000000000000000
 #define SORT_CHANNEL		0x00010001534f5254
@@ -320,8 +326,10 @@ void __SaveChangesToIPL(void)
 				iplsave_buf.channels[i].title_id = channels[juego].idInt;
 			}
 
-			//SECONDARY TYPE: 00=normal , 01=disc
-			if (channels[juego].idInt == DISC_CHANNEL) iplsave_buf.channels[i].secondary_type = 0x01;
+			//SECONDARY TYPE: 00=normal , 01=disc,mii,shop,photo channel
+			if (channels[juego].idInt == DISC_CHANNEL || channels[juego].idInt == MII_CHANNEL ||
+				channels[juego].idInt == SHOP_CHANNEL || channels[juego].idInt == PHOTO_CHANNEL || 
+				channels[juego].idInt == PHOTO_CHANNEL_11) iplsave_buf.channels[i].secondary_type = 0x01;
 			else iplsave_buf.channels[i].secondary_type = 0x00;
 
 		}
@@ -397,36 +405,56 @@ s32 __ChannelIDCmp(const void *a, const void *b){
 #define VALIDROWS 15
 int __Select_Game(void){
 	int validChannels[nChannels];
-	int i, validPage, maxValidPages, selected;
+	int validPage, maxValidPages, selected;
 	u32 boton;
 	int ret=-1;
 	int nValid=0;
 	char tempString[128];
 
-	for(i=0; i<nChannels; i++){
-		if(!channels[i].inMenu){
-			validChannels[nValid]=i;
-			nValid++;
+	bool isPhotoChannelPresent = false;
+	int photoChannelIndex = 0;
+	bool isPhotoChannel11Present = false;
+	
+	for(int i = 0; i < nChannels; i++)
+	{
+		if (!isPhotoChannelPresent && !strcmp(channels[i].id, "HAAA")) 
+		{
+			isPhotoChannelPresent = true;
+			photoChannelIndex = i;
+		}
+		else 
+		{
+			if (!isPhotoChannel11Present && !strcmp(channels[i].id, "HAYA")) isPhotoChannel11Present = true;
+			if (!channels[i].inMenu)
+			{
+				validChannels[nValid] = i;
+				++nValid;
+			}
 		}
 	}
+	if (!isPhotoChannel11Present)
+	{
+		validChannels[nValid] = photoChannelIndex;
+		++nValid;
+	}
 
-	if(nValid==0)
-		return -1;
+	if(nValid == 0) return -1;
 
 	qsort(&validChannels, nValid, sizeof(int), __ChannelIDCmp);
 
-	maxValidPages=(nValid/VALIDROWS)+(nValid%VALIDROWS!=0);
+	maxValidPages = (nValid / VALIDROWS) + (nValid % VALIDROWS != 0);
 	//__Error_Message("nValid", nValid);
 	//__Error_Message("pages", maxValidPages);
 
-	validPage=0;
-	selected=0;
+	validPage = 0;
+	selected = 0;
 
-	for(;;){
+	for(;;)
+	{
 		Video_DrawBackground();
 		GRRLIB_Rectangle(0, 0, 640, 480, 0x000000b0, 1);
 
-		for(i=0; i<VALIDROWS && validPage*VALIDROWS+i<nValid; i++){
+		for(int i = 0; i<VALIDROWS && validPage*VALIDROWS+i<nValid; i++){
 			sprintf(tempString, "%s %s", channels[validChannels[validPage*VALIDROWS+i]].id, channels[validChannels[validPage*VALIDROWS+i]].name);
 			Video_Print(48, 48+i*20, tempString, 1.5, selected==i? 0x0000FFff : 0xFFFFFFff);
 		}
