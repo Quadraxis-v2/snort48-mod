@@ -50,12 +50,6 @@ static s16 orden[MAXCHANNELS];
 static s16 moving=-1;
 static u8 page=0;
 
-s8 HWButton = -1;
-
-
-void WiiResetPressed() { HWButton = SYS_RETURNTOMENU; }
-void WiiPowerPressed() { HWButton = SYS_POWEROFF; }
-
 
 void __Error_Message(const char* texto, int err) {
 	int i;
@@ -530,9 +524,6 @@ int main(int argc, char **argv){
 
 	int wait=0;
 
-	SYS_SetResetCallback(WiiResetPressed);
-	SYS_SetPowerCallback(WiiPowerPressed);
-
 	while(1){
 		hot=Wpad_Scan();
 
@@ -582,8 +573,6 @@ int main(int argc, char **argv){
 			break;
 		}
 
-		if(HWButton != -1) break;
-
 		if(hot==HOTSPOT_LEFT || hot==HOTSPOT_RIGHT){
 			wait++;
 		}
@@ -625,7 +614,6 @@ out:
 	Wpad_Finish();
 	Video_Finish();
 
-	if (HWButton == -1) HWButton = SYS_RETURNTOMENU;
-	SYS_ResetSystem(HWButton, 0, 0);
+	SYS_ResetSystem(SYS_RETURNTOMENU, 0, 0);
 	exit(0);
 }
