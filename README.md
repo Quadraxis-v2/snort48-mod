@@ -6,7 +6,7 @@ Changes from 1.1:
 - Adds support for all system channels and all game channels. Previously only a small set of system channels were supported.
 - Adds language support. The name of the titles will appear in the system language
 - Title names are correctly displayed and they don't overflow the banner
-- Pressing POWER shuts down the system and pressing RESET goes back to the menu
+- Photo Channel 1.0 is not shown if 1.1 is detected
 
 # Original Readme
 
