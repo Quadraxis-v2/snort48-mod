@@ -6,7 +6,7 @@
 extern const uint8_t background_png[];
 extern const uint8_t background_png_end[];
 #if __cplusplus >= 201103L
-static constexpr size_t background_png_size=40199;
+static constexpr size_t background_png_size=67925;
 #else
-static const size_t background_png_size=40199;
+static const size_t background_png_size=67925;
 #endif
