@@ -1,0 +1,52 @@
+name: Run checks
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: devkitpro/devkitppc
+
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cppcheck
+          
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Cache Cppcheck build folder
+        id: cache-build
+        uses: actions/cache@v3.0.11
+        with:
+          path: cppcheckFolder
+          key: checks
+        
+      - name: Prepare environment
+        if: ${{ steps.cache-build.outputs.cache-hit != 'true' }}  # Only if the cache is not found
+        run: |
+          mkdir cppcheckFolder
+          echo "<?xml version="1"?>
+                <platform>
+                  <char_bit>8</char_bit>
+                  <default-sign>unsigned</default-sign>
+                  <sizeof>
+                    <short>2</short>
+                    <int>4</int>
+                    <long>4</long>
+                    <long-long>8</long-long>
+                    <float>4</float>
+                    <double>8</double>
+                    <long-double>8</long-double>
+                    <pointer>4</pointer>
+                    <size_t>4</size_t>
+                    <wchar_t>4</wchar_t>
+                  </sizeof>
+                </platform>" > cppcheckFolder/wii
+      
+      - name: Run static checks
+        run: cppcheck source/ --enable=all --verbose -D__wii__ --platform=cppcheckFolder/wii --cppcheck-build-dir=cppcheckFolder --suppress=unusedFunction --error-exitcode=1
+
+      - name: Build
+        run: make build
