@@ -18,7 +18,7 @@ jobs:
         
       - name: Cache Cppcheck build folder
         id: cache-build
-        uses: actions/cache@vv4.0.2
+        uses: actions/cache@v4.0.2
         with:
           path: cppcheckFolder
           key: checks
