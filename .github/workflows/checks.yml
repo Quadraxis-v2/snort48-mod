@@ -14,11 +14,11 @@ jobs:
           sudo apt-get install -y cppcheck
           
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.7
         
       - name: Cache Cppcheck build folder
         id: cache-build
-        uses: actions/cache@v3.0.11
+        uses: actions/cache@vv4.0.2
         with:
           path: cppcheckFolder
           key: checks
@@ -46,7 +46,7 @@ jobs:
                 </platform>" > cppcheckFolder/wii
       
       - name: Run static checks
-        run: cppcheck source/ --enable=all --verbose -D__wii__ --platform=cppcheckFolder/wii --cppcheck-build-dir=cppcheckFolder --suppress=unusedFunction --error-exitcode=1
+        run: cppcheck source/ --enable=warning,style,performance,portability,information --verbose -D__wii__ --platform=cppcheckFolder/wii --cppcheck-build-dir=cppcheckFolder --error-exitcode=1
 
       - name: Build
         run: make build
