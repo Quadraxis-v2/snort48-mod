@@ -148,7 +148,7 @@ void Video_DrawBanner(const char* id, const char* title, int x, int y, u8 select
 	char* titleCopy = "";
 	strcpy(titleCopy, title);
 
-	char* token = strtok(titleCopy, " ");
+	const char* token = strtok(titleCopy, " ");
 	char aux[32] = "";
 	strcpy(aux, token);
 	token = strtok(0, " ");

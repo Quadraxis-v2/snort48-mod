@@ -112,7 +112,7 @@ run:
 
 #---------------------------------------------------------------------------------
 test:
-	$(DOLPHIN_HOME)/dolphin --debugger --batch --audio_emulation=LLE --exec=$(TARGET).dol
+	$(DOLPHIN_HOME)/dolphin --debugger --logger --audio_emulation=LLE --exec=$(TARGET).dol
 
 
 #---------------------------------------------------------------------------------

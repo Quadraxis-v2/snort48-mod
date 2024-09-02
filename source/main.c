@@ -86,7 +86,7 @@ void __Error_Message(const char* texto, int err) {
 int __GetTitlesFromNAND(void)
 {
 	u32 maxnum = 0, entryCount = 0;
-
+	channel* channelCopy = 0;
 	dirent_t* list = 0;
 	char path[102] = "";
 
@@ -105,9 +105,11 @@ int __GetTitlesFromNAND(void)
 			}
 			maxnum += entryCount;
 
+			channelCopy = channels;
 			channels = realloc(channels, sizeof(channel) * (maxnum + 1)); //+1 (disc channel)
 			if (channels == 0)
 			{
+				if (channelCopy) free(channelCopy);
 				free(list);
 				__Error_Message("Out of memory.", -1);
 				return -1;
@@ -115,7 +117,6 @@ int __GetTitlesFromNAND(void)
 
 			for(int j = 0; j < entryCount; ++j)
 			{
-				int length = 0;
 				//char *out;
 				u8* buffer = allocate_memory(0x1E4 + 4);
 				if (buffer == 0) __Error_Message("Out of memory.", -3);
@@ -175,7 +176,7 @@ int __GetTitlesFromNAND(void)
 						int k = 0;
 						for (k = 0; buffer[k * 2] != 0x00; ++k);
 						
-						length = k;
+						s32 length = k;
 
 						channels[nChannels].name = malloc(length + 1);
 						if (channels[nChannels].name == 0)
