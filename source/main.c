@@ -86,7 +86,6 @@ void __Error_Message(const char* texto, int err) {
 int __GetTitlesFromNAND(void)
 {
 	u32 maxnum = 0, entryCount = 0;
-	channel* channelCopy = channels;
 	dirent_t* list = 0;
 	char path[102] = "";
 
@@ -105,7 +104,7 @@ int __GetTitlesFromNAND(void)
 			}
 			maxnum += entryCount;
 
-			channelCopy = channels;
+			channel* channelCopy = channels;
 			channels = realloc(channels, sizeof(channel) * (maxnum + 1)); //+1 (disc channel)
 			if (channels == 0)
 			{

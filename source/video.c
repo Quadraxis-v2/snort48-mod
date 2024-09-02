@@ -137,7 +137,7 @@ void Video_DrawBanner(const char* id, const char* title, int x, int y, u8 select
 	else if (id[0] == 'J') color = 0x26585ce0;
 	else if (id[0] == 'N') color = 0x265c2ee0;
 	else if (id[0] == 'H' || id[0] == 'D') color = 0x060606e0;
-	else if (id[0] == 'S' || id[1] == 'O' || id[2] == 'R' || id[3] == 'T') color = 0x002affe0;
+	else if (id[0] == 'S' && id[1] == 'O' && id[2] == 'R' && id[3] == 'T') color = 0x002affe0;
 	
 	//515c26
 	//5c4726
