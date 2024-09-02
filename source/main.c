@@ -86,7 +86,7 @@ void __Error_Message(const char* texto, int err) {
 int __GetTitlesFromNAND(void)
 {
 	u32 maxnum = 0, entryCount = 0;
-	channel* channelCopy = 0;
+	channel* channelCopy = channels;
 	dirent_t* list = 0;
 	char path[102] = "";
 
