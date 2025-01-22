@@ -39,10 +39,7 @@ s32 getdir(char *path, dirent_t **ent, u32 *cnt){
 	u32 num = 0;
 
 	ret = ISFS_ReadDir(path, NULL, &num);
-	if(ret != ISFS_OK){
-		printf("Error: could not get dir entry count! (result: %d)\n", ret);
-		return -1;
-	}
+	if (ret != ISFS_OK) return 0; // Most likely titles of this type don't exist in the system, so we skip them
 
 	char ebuf[ISFS_MAXPATH + 1];
 

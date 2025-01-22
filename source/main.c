@@ -99,7 +99,9 @@ int __GetTitlesFromNAND(void)
 			int ret = getdir(path, &list, &entryCount);
 			if (ret < 0)
 			{
-				__Error_Message("Reading folder failed. I can't get title list.", ret);
+				char errorMsg[149] = "";
+				sprintf(errorMsg, "Reading folder %s failed. I can't get title list.", path);
+				__Error_Message(errorMsg, ret);
 				return ret;
 			}
 			maxnum += entryCount;
