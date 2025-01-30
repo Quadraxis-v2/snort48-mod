@@ -9,6 +9,7 @@
 
 #include "constants.h"
 #include "video.h"
+#include "tools.h"
 
 typedef struct{
 	u16 x;
@@ -25,14 +26,16 @@ int P1MX, P1MY, P1MA;
 u32 WPADKeyDown;
 u32 WPADKeyHeld;
 
-void Wpad_AddHotSpot(u8 pos, u16 x, u16 y, u16 width, u16 height){
-	hotSpots[pos].x=x;
-	hotSpots[pos].y=y;
-	hotSpots[pos].width=width;
-	hotSpots[pos].height=height;
+void Wpad_AddHotSpot(u8 pos, u16 x, u16 y, u16 width, u16 height)
+{
+	hotSpots[pos].x = x;
+	hotSpots[pos].y = y;
+	hotSpots[pos].width = width;
+	hotSpots[pos].height = height;
 }
 
-void Wpad_Init(void){
+void Wpad_Init(void)
+{
 	// Initialise the Wiimotes
 	WPAD_Init();
 	WPAD_SetIdleTimeout(60*10);
@@ -52,7 +55,8 @@ void Wpad_Finish(void){
 	WPAD_Shutdown();
 }
 
-int Wpad_Scan(void){
+int Wpad_Scan(void)
+{
 	WPAD_ScanPads();
 	WPADKeyDown = WPAD_ButtonsDown(WPAD_CHAN_0);
 

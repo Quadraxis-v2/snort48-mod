@@ -12,9 +12,11 @@
 
 #include <grrlib.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "constants.h"
 #include "wpad.h"
+#include "tools.h"
 //#include "video.h"
 
 #include "cursor_png.h"
@@ -123,7 +125,9 @@ void Video_DrawPageInfo(u8 left, u8 right, u8 page){
 	GRRLIB_DrawTile(640-ARROWSX, ARROWSY, GFX_Arrows, 0, -1, -1, OPAQUE, right);
 
 	for(i=0; i<PAGES; i++)
+	{
 		GRRLIB_DrawTile(196+64*i, 388, GFX_Pages, 0, 1, 1, i==page? OPAQUE : 0xffffff80, i);
+	}
 }
 
 
@@ -145,29 +149,32 @@ void Video_DrawBanner(const char* id, const char* title, int x, int y, u8 select
 	Video_Print(x - 10, y - 16, id, 0.6, 0xFFFFFF80);
 
 	// Adjust title name position
-	char* titleCopy = "";
-	strcpy(titleCopy, title);
-
-	const char* token = strtok(titleCopy, " ");
-	char aux[32] = "";
-	strcpy(aux, token);
-	token = strtok(0, " ");
-
-	int i = 0;
-	while (token)
+	if (title && title[0] != '\0')
 	{
-		if (strlen(aux) + 1 + strlen(token) <= 13) strcat(strcat(aux, " "), token);
-		else 
-		{
-			Video_Print(x - 40 + (13 - strlen(aux)) * 3, y + 8 + i * 16, aux, 0.8, 0xFFFFFFe0);
-			strcpy(aux, token);
-			++i;
-		}
-		token = strtok(0, " ");
-	}
-	Video_Print(x - 40 + (13 - strlen(aux)) * 3, y + 8 + i * 16, aux, 0.8, 0xFFFFFFe0);
+		char* titleCopy = "";
+		strcpy(titleCopy, title);
 
-	GRRLIB_DrawTile(x, y, GFX_Borders, 0, 1, 1, OPAQUE, selected);
+		const char* token = strtok(titleCopy, " ");
+		char aux[32] = "";
+		strcpy(aux, token);
+		token = strtok(0, " ");
+
+		int i = 0;
+		while (token)
+		{
+			if (strlen(aux) + 1 + strlen(token) <= 13) strcat(strcat(aux, " "), token);
+			else 
+			{
+				Video_Print(x - 40 + (13 - strlen(aux)) * 3, y + 8 + i * 16, aux, 0.8, 0xFFFFFFe0);
+				strcpy(aux, token);
+				++i;
+			}
+			token = strtok(0, " ");
+		}
+		Video_Print(x - 40 + (13 - strlen(aux)) * 3, y + 8 + i * 16, aux, 0.8, 0xFFFFFFe0);
+
+		GRRLIB_DrawTile(x, y, GFX_Borders, 0, 1, 1, OPAQUE, selected);
+	}
 }
 
 

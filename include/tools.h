@@ -9,6 +9,14 @@
  * See http://www.gnu.org/licenses/gpl-2.0.txt for more info.
  *
  ******************************************************************************/
+
+#ifndef _TOOLS_H_
+#define _TOOLS_H_
+
+#include <stdbool.h>
+
+//#define DEBUG_VERSION		1
+
 typedef struct _dirent{
 	char name[ISFS_MAXPATH + 1];
 	int type;
@@ -38,6 +46,13 @@ typedef struct{
 } iplsave;
 
 
+typedef enum {DEBUG, ERROR, INFO, TRACE, WARN} Level;
+
+
 void *allocate_memory(u32 size);
 s32 getdir(char *, dirent_t **, u32 *);
 int read_file(char *filepath, u8 **buffer);
+
+int Log(const char* message, Level logLevel);
+
+#endif
